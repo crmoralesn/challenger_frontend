@@ -11,24 +11,17 @@ class ScoreTerms extends Component {
             words: [],
         }
         this.handleGetRanking = this.handleGetRanking.bind(this);
-        this.reloadRanking = this.reloadRanking.bind(this);
     }
 
     componentDidMount() {
         this.handleGetRanking(5);
     }
 
-    reloadRanking(value) {
-        this.setState({size: value});
-        this.handleGetRanking(value);
-    }
-
-    handleGetRanking(size) {
+    handleGetRanking() {
         const {id, page} = this.state;
         fetch(URL_API + 'word-counter/scoreterms?' + new URLSearchParams({
             id: id,
-            page: page,
-            size: size
+            page: page
         }))
             .then((response) => response.json())
             .then((data) => {
