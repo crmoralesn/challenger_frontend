@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {URL_API} from '../common/constants';
-import Pagination from "../navigator/pagination";
 import ScoreTerms from "../scoreterm/scoreterm";
+import Button from "react-bootstrap/Button";
+import Pagination from '@material-ui/lab/Pagination';
 
 class WordCounter extends Component {
     constructor(props) {
@@ -15,8 +16,7 @@ class WordCounter extends Component {
             },
             loading: true
         }
-        this.handleNextPage = this.handleNextPage.bind(this);
-        this.refreshPage = this.refreshPage.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
     }
 
     componentDidMount() {
@@ -27,59 +27,64 @@ class WordCounter extends Component {
             });
     }
 
-    refreshPage(pagination) {
+    handlePageChange = (event, pageNumber) => {
         this.setState({loading: true}, () => {
             const {id} = this.state.page;
             fetch(URL_API + 'word-counter/text?' + new URLSearchParams({
                 id: id,
-                page: pagination.currentPage
+                page: pageNumber
             }))
                 .then((response) => response.json())
                 .then((data) => {
                     this.setState({page: data, loading: false});
                 });
         });
-    }
-
-    handleNextPage() {
-        this.setState({loading: true}, () => {
-            const {id, page} = this.state.page;
-            fetch(URL_API + 'word-counter/text?' + new URLSearchParams({
-                id: id,
-                page: page + 1
-            }))
-                .then((response) => response.json())
-                .then((data) => {
-                    this.setState({page: data, loading: false});
-                });
-        });
-
     }
 
     render() {
         const {page, title, text, total_pages} = this.state.page;
-        let pagination;
-        if (total_pages > 1) {
-            pagination = <Pagination onPageChanged={this.refreshPage} totalRecords={total_pages} actual={page}/>
-        }
         return (
-            <div className="container-fluid">
+            <div className="container-fluid p-3">
+                <div className="row" >
+                    <div className="col-md-8">
+                        <h3>{title}</h3>
+                    </div>
+                    <div>
+
+                    </div>
+                </div>
                 <div className="row">
                     <div className="col-md-12">
-                        <h2>
-                            {title}
-                        </h2>
-                        <p>
+                        <span>
                             {text}
-                        </p>
-                        <p>
-                            {pagination}
-                        </p>
+                        </span>
+                    </div>
+                </div>
+                {total_pages > 1 &&
+                    <div className="row pt-3">
+                        <div className="col-md-6">
+                            Páginas:
+                            <Pagination count={total_pages}
+                                        page={page}
+                                        variant="outlined"
+                                        color="primary"
+                                        shape="rounded"
+                                        onChange={this.handlePageChange.bind(this)}/>
+                        </div>
+                    </div>
+                }
+                <div className="row">
+                    <div className="col-md-12">
                         <div>
                             {this.state.page.page > 0 && !this.state.loading &&
                             <ScoreTerms id={this.state.page.id} page={this.state.page.page}/>
                             }
                         </div>
+                    </div>
+                    <div>
+                        <Button variant="primary"
+                                onClick={() => window.location.reload(false)}>Analizar otro!
+                        </Button>
                     </div>
                 </div>
             </div>

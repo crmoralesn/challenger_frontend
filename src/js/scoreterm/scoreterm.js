@@ -9,7 +9,6 @@ class ScoreTerms extends Component {
             id: props.id,
             page: props.page,
             words: [],
-            size: 5
         }
         this.handleGetRanking = this.handleGetRanking.bind(this);
         this.reloadRanking = this.reloadRanking.bind(this);
@@ -55,21 +54,19 @@ class ScoreTerms extends Component {
             </Fragment>);
         return (
             <div>
-                <dl className="row">
-                    <div className="row">
+                    <div className="row pt-3">
                         <div className="col-md-4">
                         </div>
-                        <div className="col-md-2 fw-bold">
-                            Palabra
+                        <div className="col-md-2 ">
+                            <h4>Palabra</h4>
                         </div>
-                        <div className="col-md-2 fw-bold">
-                            Número de ocurrencias
+                        <div className="col-md-2">
+                            <h4>Apariciones</h4>
                         </div>
                         <div className="col-md-4">
                         </div>
                     </div>
                     {terms}
-                </dl>
             </div>
         );
     }
